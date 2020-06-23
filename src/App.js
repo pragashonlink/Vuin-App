@@ -1,95 +1,101 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  Platform,
-  TouchableHighlight,
-  Animated,
-  Easing,
+  SafeAreaView,
+  SectionList,
+  ImageBackground,
 } from 'react-native';
-import logo from './logo.png';
+// import Constants from "expo-constants";
 
-class App extends Component {
-  state = {
-    spinValue: new Animated.Value(0),
-  };
+const image = {uri: './public/movie_image.jpeg'};
 
-  onClick = () => {
-    const wasRotated = this.state.spinValue._value === 1;
-    Animated.timing(this.state.spinValue, {
-      toValue: wasRotated ? 0 : 1,
-      duration: 250,
-      easing: Easing.linear,
-    }).start();
-  };
+const DATA = [
+  {
+    title: 'Added Recently',
+    data: [
+      'VIP',
+      'Anjaan',
+      'Arima Nambi',
+      'Dumeel',
+      'Maatraan',
+      'Singam 1',
+      'Penguin',
+    ],
+  },
+  {
+    title: 'Action',
+    data: ['Mersal', '100', 'Petta', 'Bigil', 'Viswasam', 'Kaappan'],
+  },
+  {
+    title: 'Comedy',
+    data: [
+      'Comali',
+      'Kavalai Vendam',
+      'Ivan Thanthiran',
+      'Gurkha',
+      'Kanchana 3',
+      'Dharala Prabhu',
+    ],
+  },
+  {
+    title: 'Thriller',
+    data: [
+      'Dhuruvangal Pathinaaru',
+      'Psycho',
+      'Thegidi',
+      'Thambi',
+      '2.0',
+      'Thupparivalan',
+    ],
+  },
+];
 
-  render() {
-    const spin = this.state.spinValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '360deg'],
-    });
+const Item = ({title}) => (
+  <View style={styles.item}>
+    <ImageBackground source={image} style={styles.image}>
+      <Text style={styles.title}>{title}</Text>
+    </ImageBackground>
+  </View>
+);
 
-    return (
-      <View style={styles.container}>
-        <Animated.Image
-          source={logo}
-          style={[styles.logo, {transform: [{rotate: spin}]}]}
-        />
-        <Text style={styles.title}>Create React Native Web App</Text>
-        <Text style={styles.text}>
-          Open up src/App.js to start working on your app!
-        </Text>
-        <Text style={styles.text}>
-          Changes you make will automatically reload.
-        </Text>
-        {Platform.OS !== 'web' && (
-          <Text style={styles.text}>
-            Shake your phone to open the developer menu.
-          </Text>
-        )}
-        <TouchableHighlight
-          onPress={this.onClick}
-          style={styles.button}
-          underlayColor={'#0A84D0'}>
-          <Text style={styles.buttonText}>Rotate Logo</Text>
-        </TouchableHighlight>
-      </View>
-    );
-  }
-}
+const App = () => (
+  <SafeAreaView style={styles.container}>
+    <SectionList
+      sections={DATA}
+      keyExtractor={(item, index) => item + index}
+      renderItem={({item}) => <Item title={item} />}
+      renderSectionHeader={({section: {title}}) => (
+        <Text style={styles.header}>{title}</Text>
+      )}
+    />
+  </SafeAreaView>
+);
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#282c34',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 10,
+    marginHorizontal: 16,
   },
-  logo: {
-    width: 300,
-    height: 300,
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+  },
+  header: {
+    fontSize: 32,
+    backgroundColor: '#fff',
   },
   title: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 24,
   },
-  text: {
-    color: '#fff',
-  },
-  button: {
-    borderRadius: 3,
-    padding: 20,
-    marginVertical: 10,
-    marginTop: 10,
-    backgroundColor: '#1B95E0',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+  image: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
   },
 });
-
-export default App;
